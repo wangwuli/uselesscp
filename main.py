@@ -14,12 +14,12 @@ class Mywindow(QtWidgets.QMainWindow):
 	
 		self.dirtree = QtWidgets.QFileSystemModel()    #左上目录树形图
 		dir='::{20D04FE0-3AEA-1069-A2D8-08002B30309D}'
-		self.dirtree.setRootPath(dir)                    #设置根目录
-		self.new.treeView.setModel(self.dirtree)           #view跟mode绑定
-		self.new.treeView.setRootIndex(self.dirtree.index(dir))     #设置显示目录
+		self.dirtree.setRootPath(dir)                    
+		self.new.treeView.setModel(self.dirtree)           
+		self.new.treeView.setRootIndex(self.dirtree.index(dir))     
 		self.new.treeView.resizeColumnToContents(0)
 		
-		self.new.treeView.clicked.connect(self.treeView_double_click)		#doubleClicked双击信号，clicked单击
+		self.new.treeView.clicked.connect(self.treeView_double_click)		
 		
 		
 		self.new.comboBox_2.activated.connect(self.continueActivated)         #combobox信号触发，右上目录树显示
@@ -30,11 +30,11 @@ class Mywindow(QtWidgets.QMainWindow):
 		
 		
 		self.new.comboBox_3.activated.connect(self.handleActivated)         #combobox信号触发，右上目录树显示					
-		self.dirtree3 = QtWidgets.QFileSystemModel()       #右上目录树，回显示
+		self.dirtree3 = QtWidgets.QFileSystemModel()
 		self.new.treeView_2.clicked.connect(self.treeView_2_double_click)
 		
 		
-		self.dirtree4 = QtWidgets.QFileSystemModel()         #右下目录树
+		self.dirtree4 = QtWidgets.QFileSystemModel()
 	
 	
 	def transmission(self):	             #右键上传点击动作
@@ -42,23 +42,22 @@ class Mywindow(QtWidgets.QMainWindow):
 		ALLfile = self.getfile(self.file_path)
 
 		
-		if ALLfile:                               #如果是单个文件此值为空			
+		if ALLfile:                            		
 			ALLdir = self.getdir(self.file_path)
 			
-			filenameone = self.dirtree.fileName(self.dirtree.index(self.file_path))   #获取当前选择的名字
+			filenameone = self.dirtree.fileName(self.dirtree.index(self.file_path))   
 			selectdir = self.targetpath + '\\' + filenameone
 			try:
 				os.mkdir(selectdir)
 				self.new.plainTextEdit.appendPlainText("[创建目录] %s" %selectdir)
 			except FileExistsError:
 				self.new.plainTextEdit.appendPlainText("[目录已存在] %s" %selectdir)
-			#print ('[当前选择的名字为：%s]' %filenameone)
 			
-			for filedir in ALLdir:                 #选择的是目录路径
+			for filedir in ALLdir:                 
 				
-				dirindex = self.dirtree.index(filedir)           #索引
+				dirindex = self.dirtree.index(filedir)          
 				
-				if self.dirtree.isDir(dirindex):      #如果索引是目录
+				if self.dirtree.isDir(dirindex):  
 					
 					target = selectdir + filedir.replace(self.file_path,'')
 					# print ('#####%s   %s' %(target,target2))
@@ -99,11 +98,10 @@ class Mywindow(QtWidgets.QMainWindow):
 	
 	def myListWidgetContext(self, point):    
 		popMenu = QtWidgets.QMenu()
-		actionA = popMenu.addAction(QtWidgets.QAction('上传', self,triggered = self.transmission))    # triggered 为右键菜单点击后的激活事件
+		actionA = popMenu.addAction(QtWidgets.QAction('上传', self,triggered = self.transmission))    
 		actionB = popMenu.addAction(QtWidgets.QAction('下载', self))
 		actionC = popMenu.addAction(QtWidgets.QAction('文件对比', self))
 		
-		#actionA.triggered.connect(self.actionHandler)
 		
 		popMenu.exec_(QtGui.QCursor.pos())	
 
@@ -111,8 +109,7 @@ class Mywindow(QtWidgets.QMainWindow):
 	def treeView_double_click(self, signal):
 		self.file_path=self.dirtree.filePath(signal)
 		
-		self.new.comboBox_2.addItem(self.file_path)           #添加下拉框
-		# self.new.comboBox_2.setItemText(0,self.file_path)	  #设置下拉框显示
+		self.new.comboBox_2.addItem(self.file_path)          
 		self.new.comboBox_2.setEditText(self.file_path)       
 		
 		
@@ -125,11 +122,10 @@ class Mywindow(QtWidgets.QMainWindow):
 			
 	def treeView_2_double_click(self, signal):
 		self.file_path2=self.dirtree3.filePath(signal)
-		#print (self.file_path2)
 		
-		self.new.comboBox_3.addItem(self.file_path2)           #添加下拉框
-		# self.new.comboBox_3.setItemText(0,self.file_path2)	  #给指定的索引位置设置文本
-		self.new.comboBox_3.setEditText(self.file_path2)        #编辑显示位置，文本设置
+		self.new.comboBox_3.addItem(self.file_path2)         
+
+		self.new.comboBox_3.setEditText(self.file_path2)      
 			
 		dir = self.file_path2
 		self.dirtree4.setRootPath(dir)
@@ -141,7 +137,7 @@ class Mywindow(QtWidgets.QMainWindow):
 	def getfile(self, directory):   #获取每一个文件的路径
 		fileall = []
 		for parent,dirnames,files in os.walk(directory):
-			for filename in files:                          #输出文件信息
+			for filename in files:                 
 				print (filename)
 				fileall.append(os.path.join(parent,filename))
 				
@@ -150,7 +146,7 @@ class Mywindow(QtWidgets.QMainWindow):
 	def getdir(self, directory):   #获取每一个目录与文件的路径
 		fileall = []
 		for parent,dirnames,files in os.walk(directory):
-			for dirname in dirnames:                          #输出文件信息
+			for dirname in dirnames:               
 				fileall.append(os.path.join(parent,dirname))
 			
 			for file in files: 
@@ -159,27 +155,22 @@ class Mywindow(QtWidgets.QMainWindow):
 	
 	
 	def continueActivated(self, index):          #右侧下拉框回车,选择的是目录路径信号触发动作
-		self.file_path = (self.new.comboBox_2.itemText(index))        #当前显示路径
-		#self.new.plainTextEdit.appendPlainText("%s 存在" %self.file_path)
-		# self.dirtree.setExpanded(self.file_path)
-		# self.new.treeView.setModel(self.dirtree)		
-		# self.new.treeView.setRootIndex(self.dirtree.index('::{20D04FE0-3AEA-1069-A2D8-08002B30309D}'))
-		pathindex = self.dirtree.index(self.file_path)                  #获取路径索引
+		self.file_path = (self.new.comboBox_2.itemText(index))    
+		pathindex = self.dirtree.index(self.file_path)       
 		
 		if os.path.exists(self.file_path):
 			self.new.plainTextEdit.appendPlainText("[源目录存在]: %s" %self.file_path)
 		else:
 			self.new.plainTextEdit.appendPlainText("[error][源目录不存在]: %s" %self.file_path)
 		
-		self.new.treeView.expand(pathindex)    #展开当前项
-		self.new.treeView.scrollTo(pathindex)    #定位到当前项
-		self.new.treeView.resizeColumnToContents(0)    #根据其内容的大小调整列的大小
-		self.new.treeView.setCurrentIndex(self.dirtree.index(self.file_path))  #设置当前项目，鼠标选中效果
-		# expand
+		self.new.treeView.expand(pathindex)
+		self.new.treeView.scrollTo(pathindex)
+		self.new.treeView.resizeColumnToContents(0) 
+		self.new.treeView.setCurrentIndex(self.dirtree.index(self.file_path)) 
 		
 		
 	def handleActivated(self, index):          #右侧下拉框回车,选择的是目录路径信号触发动作
-		self.targetpath = (self.new.comboBox_3.itemText(index))        #当前显示路径		
+		self.targetpath = (self.new.comboBox_3.itemText(index)) 	
 		
 		if os.path.exists(self.targetpath):
 			self.new.plainTextEdit.appendPlainText("[目的目录存在]: %s " %self.targetpath)
@@ -202,8 +193,7 @@ class GOGOGO(QtCore.QThread):
 		self.sourcefile = sourcefile
 		self.targetfile = targetfile
 		self.block = block
-		#print(self.sourcefile,self.targetfile,self.block)
-		#self.startin()
+
 	
 	def getfilemaxsize(self,filename):
 		try:
@@ -212,15 +202,15 @@ class GOGOGO(QtCore.QThread):
 			maxsize = (ifis.tell())
 			ifis.close()
 			if maxsize:
-				return maxsize     #返回文件末尾字节针
+				return maxsize    
 			else:
-				return -2         #文件为空文件
+				return -2        
 			
 		except FileNotFoundError:
-			return -1         #文件不存在
+			return -1       
 			
 		except PermissionError:
-			return -3         #没有权限
+			return -3      
 
 			
 	def getmd5(self,filename,maxsize,block):
@@ -246,7 +236,7 @@ class GOGOGO(QtCore.QThread):
 				cordonmd5 = sha1.hexdigest()
 				cordonfrequency = frequency
 			
-		line = filename.read(maxsize - (newsize + block))         #写入剩余字节
+		line = filename.read(maxsize - (newsize + block))    
 		sha1.update(line)
 		filename.close()
 
@@ -258,7 +248,7 @@ class GOGOGO(QtCore.QThread):
 		
 		fo = open(sourcefile, "rb")
 		inn = open(targetfile, "rb+")
-		for frequency in range(startb,int(smaxsize/block)):       #接着dmaxsize写入
+		for frequency in range(startb,int(smaxsize/block)): 
 			
 			newsize = fo.seek(frequency*block, 0)
 			line = fo.read(block)
@@ -285,7 +275,7 @@ class GOGOGO(QtCore.QThread):
 		if dmaxsize == -1:       #目标文件不存在
 			fo = open(self.sourcefile, "rb")
 			inn = open(self.targetfile, "ab")
-			for frequency in range(int(smaxsize/self.block)):       #按smaxsize批量写入字节
+			for frequency in range(int(smaxsize/self.block)):    
 				
 				newsize = fo.seek(frequency*self.block, 0)
 				line = fo.read(self.block)
@@ -293,7 +283,7 @@ class GOGOGO(QtCore.QThread):
 				inn.write(line)	
 			
 			if smaxsize > self.block:
-				line = fo.read(smaxsize - (newsize + self.block))         #写入剩余字节
+				line = fo.read(smaxsize - (newsize + self.block))   
 				inn.write(line)
 			else:
 				line = fo.read(smaxsize)
